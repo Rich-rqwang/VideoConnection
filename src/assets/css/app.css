@@ -27,6 +27,9 @@
     --border: #e5e7eb;
     --success: #10b981;
     --danger: #ef4444;
+    --navbar-h: 56px;
+    --msg-bg: wheat;
+    --msg-text: #000000;
 }
 
 @media (prefers-color-scheme: dark){
@@ -36,6 +39,18 @@
         --text: #e5e7eb;
         --text-weak: #9ca3af;
         --border: #1f2937;
+    }
+}
+
+@media (prefers-color-scheme: dark){
+    :root{
+        --bg: #0b0f14;
+        --bg-elev: #10151c;
+        --text: #e5e7eb;
+        --text-weak: #9ca3af;
+        --border: #1f2937;
+        --msg-bg: #2f3136;
+        --msg-text: #e5e7eb;
     }
 }
 
@@ -75,7 +90,7 @@ html,body{
 .status-text{ margin-left: 6px; font-size: 0.875rem; }
 
 /* ===== Video layout ===== */
-.main{ padding-top: 56px; }
+.main{ padding-top: var(--navbar-h); }
 #videos{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -87,6 +102,11 @@ html,body{
 
 @media only screen and (max-width:767px){
     .local-video{ width: 42vw; }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
 }
 
 /* ===== Chat pane ===== */
@@ -149,9 +169,10 @@ html,body{
     overflow-x: scroll;
 }
 
-.main{
+/* consolidated: .main padding now set via --navbar-h above */
+/* .main{
     padding-top: 40px;
-}
+} */
 
 
 .remote-video{
@@ -159,6 +180,11 @@ html,body{
     height:auto;
     max-height: 90vh;
     border-radius: 10px;
+}
+
+/* deduped: keep max-height in the later block */
+.remote-video{
+    max-height: 90vh;
 }
 
 
@@ -186,7 +212,7 @@ html,body{
     bottom: 16px;
     left: 16px;
     position: fixed;
-    width:15vw;
+    width:18vw;
     max-width: 320px;
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0,0,0,.25);
@@ -211,8 +237,8 @@ html,body{
 .msg{
     font-weight: 400;
     font-size: 12px;
-    color: black;
-    background-color: wheat;
+    color: var(--msg-text);
+    background-color: var(--msg-bg);
 }
 
 
@@ -239,61 +265,7 @@ html,body{
     border-radius: 0%;
     z-index: 100;
 }
-/* .send-bgc{
-    background-color: black !important;
-}
-
-.send-bgc:hover{
-    background-color: black !important;
-}
-
-.pointer{
-    cursor: pointer;
-}
-
-.bg-info {
-    background-color: #3e49a5 !important;
-}
-.btn-info {
-    color: #fff;
-    background-color: #3e49a5;
-    border-color: #3e49a5;
-}
-.btn{
-    display: inline-block;
-    font-weight: 400;
-    color: #fff;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-color:#3e49a5 ;
-    border: 1px solid #3e49a5;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-    /* 新增的伪类 */
-    /* &:hover,
-    &:focus,
-    &:active,
-    &.active {
-        color: #fff;
-        background-color: #3e49a5;
-        border-color: #3e49a5;
-    }
-}
-.btn-block {
-    display: block;
-    width: 100%;
-}
-.border-info {
-    border-color: #3e49a5 !important;
-} */
+/* legacy styles removed; brand/button mapping defined earlier */
 .record-option{ 
     height: 200px;
     border-radius: 12px;
