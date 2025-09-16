@@ -1,0 +1,533 @@
+.chat-col{
+    right: -100vw;
+    bottom: 0;
+    top: 40.5px;
+    z-index: 1000;
+    position: fixed;
+    color: #fff;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 40px;
+    padding-top: 15px;
+    min-height: 100vh;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+}
+
+/* ===== Modern Theme Variables and Base Reset ===== */
+:root{
+    --brand: #3e49a5;
+    --brand-600: #364090;
+    --brand-700: #2d367b;
+    --bg: #f7f8fb;
+    --bg-elev: #ffffff;
+    --text: #111827;
+    --text-weak: #6b7280;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --danger: #ef4444;
+    --navbar-h: 56px;
+    --msg-bg: wheat;
+    --msg-text: #000000;
+}
+
+@media (prefers-color-scheme: dark){
+    :root{
+        --bg: #0b0f14;
+        --bg-elev: #10151c;
+        --text: #e5e7eb;
+        --text-weak: #9ca3af;
+        --border: #1f2937;
+    }
+}
+
+@media (prefers-color-scheme: dark){
+    :root{
+        --bg: #0b0f14;
+        --bg-elev: #10151c;
+        --text: #e5e7eb;
+        --text-weak: #9ca3af;
+        --border: #1f2937;
+        --msg-bg: #2f3136;
+        --msg-text: #e5e7eb;
+    }
+}
+
+html,body{
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Elevation helpers */
+.card, .custom-modal-content, .navbar{
+    background: var(--bg-elev);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+}
+
+/* Brand mapping for existing classes */
+.bg-info{ background-color: var(--brand) !important; }
+.btn-info{
+    color: #fff;
+    background-color: var(--brand);
+    border-color: var(--brand);
+}
+.btn-info:hover{ background-color: var(--brand-600); border-color: var(--brand-600); }
+.btn-outline-danger{ border-color: var(--danger); color: var(--danger); }
+.btn-outline-danger:hover{ background-color: var(--danger); color: #fff; }
+.border-info{ border-color: var(--brand) !important; }
+
+/* Links inside colored buttons */
+.btn a{ color: inherit; }
+
+/* ===== Navbar refinements ===== */
+.navbar{
+    backdrop-filter: saturate(1.2) blur(6px);
+}
+.navbar .text-white{ opacity: .95; }
+.navbar .btn{ margin-left: 6px; }
+.status-text{ margin-left: 6px; font-size: 0.875rem; }
+
+/* ===== Video layout ===== */
+.main{ padding-top: var(--navbar-h); }
+#videos{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+.remote-video{ width: 100%; height: auto; border-radius: 10px; }
+.remote-video-controls{ border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+.local-video{ width: 18vw; max-width: 320px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+
+@media only screen and (max-width:767px){
+    .local-video{ width: 42vw; }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+}
+
+/* ===== Chat pane ===== */
+/* .pull-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} */
+.chat-col.chat-opened {
+    right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 0.3s ease !important;
+    -webkit-transition: all 0.3s ease !important;
+    -moz-transition: all 0.3s ease !important;
+}
+
+#chat-messages{
+    height: 70vh;
+    margin-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+}
+
+#chat-messages::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;
+}
+
+.chat-box{
+    bottom: 0px;
+    right: 0;
+    position: absolute;
+    border: 0;
+    border-top: 1px groove white;
+    border-left: 1px groove white;
+    font-size: small;
+}
+
+.chat-box::placeholder{
+    font-size: small;
+    font-weight: lighter;
+    font-style: italic;
+}
+
+.chat-box,
+.chat-box:focus{
+    resize: none !important;
+    box-shadow: none !important;
+}
+
+.chat-row{
+    height: 100%;
+    overflow-x: scroll;
+}
+
+/* consolidated: .main padding now set via --navbar-h above */
+/* .main{
+    padding-top: 40px;
+} */
+
+
+.remote-video{
+    width:100%;
+    height:auto;
+    max-height: 90vh;
+    border-radius: 10px;
+}
+
+/* deduped: keep max-height in the later block */
+.remote-video{
+    max-height: 90vh;
+}
+
+
+.remote-video-controls{
+    position:absolute;
+    bottom: 0;
+    background-color:rgba(0, 0, 0, 0.5);
+    z-index:300000;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    visibility: hidden;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
+.remote-video:hover + .remote-video-controls,
+.remote-video-controls:hover{
+    visibility: visible;
+}
+
+
+.local-video{
+    bottom: 16px;
+    left: 16px;
+    position: fixed;
+    width:18vw;
+    max-width: 320px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+
+
+.mirror-mode{
+    -ms-transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+
+.sender-info{
+    font-size: smaller;
+    margin-top: 5px;
+    align-self: flex-end;
+}
+
+
+.msg{
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--msg-text);
+    background-color: var(--msg-bg);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+/* 房主发送的消息样式 */
+.msg.bg-white {
+    background-color: var(--brand) !important;
+    color: white !important;
+    margin-left: auto;
+    max-width: 80%;
+}
+
+/* 接收的消息样式 */
+.msg:not(.bg-white) {
+    background-color: var(--msg-bg);
+    color: var(--msg-text);
+    margin-right: auto;
+    max-width: 80%;
+}
+
+
+.chat-card{
+    border-radius: 6px;
+}
+
+
+.btn-no-effect:focus{
+    box-shadow: none;
+}
+
+.very-small{
+    font-size: 6px !important;
+}
+
+
+#close-single-peer-btn {
+    position: fixed;
+    top: 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    border-radius: 0%;
+    z-index: 100;
+}
+/* legacy styles removed; brand/button mapping defined earlier */
+/* 录制选项卡片样式 */
+.recording-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.record-option-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-elev);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.record-option-card:hover {
+    border-color: var(--brand);
+    background: linear-gradient(135deg, var(--bg-elev) 0%, rgba(62, 73, 165, 0.05) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(62, 73, 165, 0.15);
+}
+
+.record-option-card:active {
+    transform: translateY(0);
+}
+
+.option-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-600) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.option-icon i {
+    font-size: 24px;
+    color: white;
+}
+
+.option-content {
+    flex: 1;
+}
+
+.option-content h5 {
+    margin: 0 0 8px 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.option-content p {
+    margin: 0;
+    color: var(--text-weak);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.option-arrow {
+    color: var(--text-weak);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.record-option-card:hover .option-arrow {
+    color: var(--brand);
+    transform: translateX(4px);
+}
+
+/* 模态框样式改进 */
+.recording-modal {
+    max-width: 500px;
+    width: 90%;
+    margin: 10% auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--bg-elev) 0%, rgba(62, 73, 165, 0.02) 100%);
+}
+
+.modal-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-weak);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px 24px 24px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.recording-tips {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-weak);
+    font-size: 13px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .recording-modal {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .record-option-card {
+        padding: 16px;
+    }
+    
+    .option-icon {
+        width: 50px;
+        height: 50px;
+        margin-right: 16px;
+    }
+    
+    .option-icon i {
+        font-size: 20px;
+    }
+    
+    .option-content h5 {
+        font-size: 16px;
+    }
+    
+    .option-content p {
+        font-size: 13px;
+    }
+}
+
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+
+.custom-modal-content {
+    background-color: var(--bg-elev);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid var(--brand);
+    width: 80%;
+    border-radius: 12px;
+}
+
+
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+
+@media only screen and (max-width:767px){
+    .chat-col{
+        right: -100vw;
+        width: 100vw;
+        z-index: 99999;
+        transition: 0.3s;
+        top: 47px;
+    }
+  
+    .chat-opened::-webkit-scrollbar {
+        display: none;
+    }
+
+    #chat-messages{
+        height: 60vh;
+    }
+
+    .chat-box{
+        bottom: 90px;
+        margin-bottom: 0px;
+    }
+    
+    .card-sm{
+        max-width: 100%;
+        min-width: 50%;
+    }
+
+
+    .local-video{
+        width:40vw;
+    }
+}
+
+
+@media (min-width:768px){
+    .card{
+        width: 50%;
+        z-index: 1000;
+    }
+}
